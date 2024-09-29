@@ -3,7 +3,7 @@ import { Settings } from "lucide-react";
 
 export default function Navbar() {
   return (
-    <nav className="flex items-center justify-between bg-white text-slate-900 h-20 px-7 fixed top-0 w-full ">
+    <nav className="flex items-center justify-between bg-white text-slate-900 h-20 px-7 fixed top-0 w-full z-10 shadow-md">
       <div className="max-w-screen-xl flex items-center w-full">
         {/* Logo */}
         <div className="flex items-start space-x-6">
@@ -57,3 +57,4 @@ export default function Navbar() {
     </nav>
   );
 }
+
