@@ -1,17 +1,12 @@
 import { User } from "lucide-react";
 import React from "react";
 
-export default function TableMahasiswa() {
+export default function DataLengkapM() {
   return (
     <div className="flex flex-col items-start bg-white max-w-md">
       <h2 className="font-semibold text-lg text-slate-900">
-        Mahasiswa Yang Butuh Pertolongan Segera
+        Data Lengkap Mahasiswa
       </h2>
-      <h6 className="font-light text-lg text-slate-900 whitespace-nowrap mt-2">
-        Mahasiswa dibawah ini terindikasi memiliki kesehatan mental dan
-        membutuhkan tindakan segera
-      </h6>
-
       <div className="flex items-center text-slate-950 font-normal text-xl bg-slate-100 border rounded-lg shadow mt-7 px-11 py-5 w-[1480px] h-[80px]">
         {/* <User className="w-7 h-7 mr-2" />{" "} */}
         <h3 className="whitespace-nowrap">

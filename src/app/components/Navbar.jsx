@@ -1,7 +1,12 @@
+"use client"
 import React from "react";
 import { Settings } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation"; // Import usePathname
 
 export default function Navbar() {
+  const pathname = usePathname(); // Get current path
+
   return (
     <nav className="flex items-center justify-between bg-white text-slate-900 h-20 px-7 fixed top-0 w-full z-10 shadow-md">
       <div className="max-w-screen-xl flex items-center w-full">
@@ -19,29 +24,43 @@ export default function Navbar() {
         <div className="flex-grow flex justify-center ml-20">
           <ul className="font-semibold flex flex-row space-x-12">
             <li>
-              <a
-                href="#"
-                className="block py-2 px-3 text-white bg-blue-700 rounded hover:bg-blue-600 transition duration-300"
-                aria-current="page"
-              >
-                Dashboard
-              </a>
+              <Link href="/Admin/dashboard" legacyBehavior>
+                <a
+                  className={`block py-2 px-3 rounded transition duration-300 ${
+                    pathname === "/Admin/dashboard"
+                      ? "text-white bg-blue-700 hover:bg-blue-600"
+                      : "text-gray-900 hover:bg-gray-100 hover:text-blue-700"
+                  }`}
+                >
+                  Dashboard
+                </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="#"
-                className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 hover:text-blue-700 transition duration-300"
-              >
-                Mahasiswa
-              </a>
+              <Link href="/Admin/Mahasiswa" legacyBehavior>
+                <a
+                  className={`block py-2 px-3 rounded transition duration-300 ${
+                    pathname === "/Admin/Mahasiswa"
+                      ? "text-white bg-blue-700 hover:bg-blue-600"
+                      : "text-gray-900 hover:bg-gray-100 hover:text-blue-700"
+                  }`}
+                >
+                  Mahasiswa
+                </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="#"
-                className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 hover:text-blue-700 transition duration-300"
-              >
-                Laporan
-              </a>
+              <Link href="/Admin/laporan" legacyBehavior>
+                <a
+                  className={`block py-2 px-3 rounded transition duration-300 ${
+                    pathname === "/Admin/laporan"
+                      ? "text-white bg-blue-700 hover:bg-blue-600"
+                      : "text-gray-900 hover:bg-gray-100 hover:text-blue-700"
+                  }`}
+                >
+                  Laporan
+                </a>
+              </Link>
             </li>
           </ul>
         </div>
@@ -57,4 +76,3 @@ export default function Navbar() {
     </nav>
   );
 }
-

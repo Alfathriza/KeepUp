@@ -27,7 +27,7 @@ const chartSetting = {
   },
 };
 
-export default function SimpleBarChart() {
+export default function SBarChart() {
   return (
     <div style={{ width: "700px", height: "400px", marginTop: "20px" }}>
       
