@@ -1,9 +1,9 @@
 import React from "react";
-import Navbar from "@/app/components/Navbar";
-import SmallCard from "@/app/components/SmallCard";
-import TotalCard from "@/app/components/TotalCard";
-import TableMahasiswa from "@/app/components/TableMahasiswa";
-import DataLengkapM from "@/app/components/DataLengkapM";
+import Navbar from "@/app/components/Admin/Navbar";
+import SmallCard from "@/app/components/Admin/SmallCard";
+import TotalCard from "@/app/components/Admin/TotalCard";
+import TableMahasiswa from "@/app/components/Admin/TableMahasiswa";
+import DataLengkapM from "@/app/components/Admin/DataLengkapM";
 
 export default function Mahasiswa() {
   return (

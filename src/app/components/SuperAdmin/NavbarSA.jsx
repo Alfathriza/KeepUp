@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React from "react";
 import { Settings } from "lucide-react";
 import Link from "next/link";
@@ -27,9 +27,9 @@ export default function Navbar() {
               <Link href="/SuperAdmin/dashboard" legacyBehavior>
                 <a
                   className={`block py-2 px-3 rounded transition duration-300 ${
-                    pathname === "/Admin/dashboard"
-                      ? "text-white bg-blue-700 hover:bg-blue-600"
-                      : "text-gray-900 hover:bg-gray-100 hover:text-blue-700"
+                    pathname === "/SuperAdmin/dashboard"
+                      ? "bg-blue-700 text-white"
+                      : "text-gray-900 hover:bg-blue-300 hover:text-white"
                   }`}
                 >
                   Dashboard
@@ -40,9 +40,9 @@ export default function Navbar() {
               <Link href="/SuperAdmin/Mahasiswa" legacyBehavior>
                 <a
                   className={`block py-2 px-3 rounded transition duration-300 ${
-                    pathname === "/Admin/Mahasiswa"
-                      ? "text-white bg-blue-700 hover:bg-blue-600"
-                      : "text-gray-900 hover:bg-gray-100 hover:text-blue-700"
+                    pathname === "/SuperAdmin/Mahasiswa"
+                      ? "bg-blue-700 text-white"
+                      : "text-gray-900 hover:bg-blue-300 hover:text-white"
                   }`}
                 >
                   Mahasiswa
@@ -53,9 +53,9 @@ export default function Navbar() {
               <Link href="/SuperAdmin/laporan" legacyBehavior>
                 <a
                   className={`block py-2 px-3 rounded transition duration-300 ${
-                    pathname === "/Admin/laporan"
-                      ? "text-white bg-blue-700 hover:bg-blue-600"
-                      : "text-gray-900 hover:bg-gray-100 hover:text-blue-700"
+                    pathname === "/SuperAdmin/laporan"
+                      ? "bg-blue-700 text-white"
+                      : "text-gray-900 hover:bg-blue-300 hover:text-white"
                   }`}
                 >
                   Laporan
@@ -66,9 +66,9 @@ export default function Navbar() {
               <Link href="/SuperAdmin/adminSA" legacyBehavior>
                 <a
                   className={`block py-2 px-3 rounded transition duration-300 ${
-                    pathname === "/Admin/laporan"
-                      ? "text-white bg-blue-700 hover:bg-blue-600"
-                      : "text-gray-900 hover:bg-gray-100 hover:text-blue-700"
+                    pathname === "/SuperAdmin/adminSA"
+                      ? "bg-blue-700 text-white"
+                      : "text-gray-900 hover:bg-blue-300 hover:text-white"
                   }`}
                 >
                   Admin
@@ -76,12 +76,12 @@ export default function Navbar() {
               </Link>
             </li>
             <li>
-              <Link href="/SuperAdmin/laporan" legacyBehavior>
+              <Link href="/SuperAdmin/Kuisioner" legacyBehavior>
                 <a
                   className={`block py-2 px-3 rounded transition duration-300 ${
-                    pathname === "/Admin/laporan"
-                      ? "text-white bg-blue-700 hover:bg-blue-600"
-                      : "text-gray-900 hover:bg-gray-100 hover:text-blue-700"
+                    pathname === "/SuperAdmin/Kuisioner"
+                      ? "bg-blue-700 text-white"
+                      : "text-gray-900 hover:bg-blue-300 hover:text-white"
                   }`}
                 >
                   Kuisioner

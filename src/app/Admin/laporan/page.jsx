@@ -2,11 +2,11 @@
 import React, { useRef } from "react";
 import { jsPDF } from "jspdf"; // Import jsPDF
 import html2canvas from "html2canvas"; // Import html2canvas
-import Navbar from "@/app/components/Navbar";
-import SimpleBarChart from "@/app/components/BarchartM"; // Ensure this path is correct
-import RecomAi from "@/app/components/RecomAi";
-import SBarChart from "@/app/components/Barchart";
-import BasicPie from "@/app/components/Piechart";
+import Navbar from "@/app/components/Admin/Navbar";
+import SimpleBarChart from "@/app/components/Admin/BarchartM"; // Ensure this path is correct
+import RecomAi from "@/app/components/Admin/RecomAi";
+import SBarChart from "@/app/components/Admin/Barchart";
+import BasicPie from "@/app/components/Admin/Piechart";
 
 const LaporanPage = () => {
   const chartsRef = useRef(); // Ref to capture chart container

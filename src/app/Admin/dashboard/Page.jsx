@@ -1,11 +1,11 @@
 import React from "react";
-import Navbar from "@/app/components/Navbar";
-import TotalCard from "@/app/components/TotalCard";
-import SmallCard from "@/app/components/SmallCard";
-import SBarChart from "@/app/components/Barchart";
-import BasicPie from "@/app/components/Piechart";
-import TableMahasiswa from "@/app/components/TableMahasiswa";
-import RecomAi from "@/app/components/RecomAi";
+import Navbar from "@/app/components/Admin/Navbar";
+import TotalCard from "@/app/components/Admin/TotalCard";
+import SmallCard from "@/app/components/Admin/SmallCard";
+import SBarChart from "@/app/components/Admin/Barchart";
+import BasicPie from "@/app/components/Admin/Piechart";
+import TableMahasiswa from "@/app/components/Admin/TableMahasiswa";
+import RecomAi from "@/app/components/Admin/RecomAi";
 
 export default function Page() {
   return (
