@@ -20,7 +20,7 @@ export default function EditKuisioner({ questions, setQuestions }) {
   };
 
   const handleBackClick = () => {
-    router.push("/SuperAdmin/editKuisioner"); // Navigate back to the previous page
+    router.push("/SuperAdmin/Kuisioner"); // Navigate back to the previous page
   };
 
   return (
