@@ -9,9 +9,9 @@ export default function Page() {
   return (
     <div className="flex flex-col bg-white min-h-screen ">
       {/* Header */}
-      <NavKuisioner />
+      
 
-      <JudulKuisioner />
+     
       <IsiKuisioner />
     </div>
   );
