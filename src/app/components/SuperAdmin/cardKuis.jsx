@@ -2,7 +2,10 @@
 import { Edit } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation"; // Import dari next/navigation
+import Cookies from "js-cookie";
 
+
+ const access_token = Cookies.get("access_token");
 export default function CardKuis() {
   const router = useRouter(); // Inisialisasi router
   const [subKuisionerData, setSubKuisionerData] = useState([]); // State untuk menyimpan data subKuisioner
@@ -17,7 +20,7 @@ export default function CardKuis() {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjRhZWVmZGUxLWFiNWYtNDEyOS1iZGUyLTlmZWFjZThlOTMxNSIsInVzZXIiOiJNdWhhbW1hZCBEYWZmYSBSYWloYW4gU3VwZXJBZG1pbiIsInJvbGUiOiIzOGQzMjIzYS0xMjYwLTQyYmYtYTMxNy02N2JlZDZlYmE2ODEiLCJpYXQiOjE3Mjk3NzcxOTgsImlzcyI6IkFwaUtlZXBVcCIsImF1ZCI6IktlZXBVcCIsImV4cCI6MTcyOTc4MDc5OH0.hGpOhDzGQ_LJaCmSTbMtT-0tz9rvoAedt60QoqxcImk`,
+              Authorization: `Bearer ${access_token}`,
               "ngrok-skip-browser-warning": "69420",
             },
           }

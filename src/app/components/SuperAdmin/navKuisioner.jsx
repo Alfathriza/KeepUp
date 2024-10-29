@@ -2,21 +2,27 @@
 import React from "react";
 import { ArrowLeft, Save } from "lucide-react";
 import { useRouter } from "next/navigation";
-import Swal from "sweetalert2"; // Import SweetAlert2
+import Swal from "sweetalert2";
+import Cookies from "js-cookie";
+
+const access_token = Cookies.get("access_token");
 
 const NavKuisioner = ({
   isEditingAnswer,
   isEditingQuestion,
   handleBackClick,
   handleSaveClick,
+  questionId,
+  questionText,
+  updateAnswers,
 }) => {
   const router = useRouter();
 
   const handleBack = () => {
     if (isEditingAnswer || isEditingQuestion) {
-      handleBackClick(); // Kembali ke daftar pertanyaan
+      handleBackClick();
     } else {
-      router.push("/SuperAdmin/Kuisioner"); // Jika tidak, kembali ke halaman kuisioner utama
+      router.push("/SuperAdmin/Kuisioner");
     }
   };
 
@@ -32,8 +38,32 @@ const NavKuisioner = ({
       cancelButtonText: "Batal",
     }).then((result) => {
       if (result.isConfirmed) {
-        handleSaveClick(); // Panggil fungsi simpan dari parent
-        Swal.fire("Tersimpan!", "Perubahan telah disimpan.", "success");
+        fetch(
+          `https://enormous-mint-tomcat.ngrok-free.app/v1/questions/${questionId}`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${access_token}`,
+              "ngrok-skip-browser-warning": "69420", // Replace with a valid token
+            },
+            body: JSON.stringify({
+              question: questionText,
+              updateAnswers: updateAnswers,
+            }),
+          }
+        )
+          .then((response) => {
+            if (response.ok) {
+              Swal.fire("Tersimpan!", "Perubahan telah disimpan.", "success");
+              handleSaveClick();
+            } else {
+              Swal.fire("Gagal!", "Terjadi kesalahan saat menyimpan.", "error");
+            }
+          })
+          .catch(() => {
+            Swal.fire("Gagal!", "Tidak dapat terhubung ke server.", "error");
+          });
       }
     });
   };

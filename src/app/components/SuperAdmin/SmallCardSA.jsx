@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { User } from "lucide-react";
+import Cookies from "js-cookie";
 
 export default function SmallCard() {
   const [statistik, setStatistik] = useState({
@@ -12,6 +13,8 @@ export default function SmallCard() {
     Kecanduan: 0,
   });
 
+  const access_token = Cookies.get("access_token")
+
   // Fetch data from API
   useEffect(() => {
     const fetchStatistik = async () => {
@@ -22,7 +25,7 @@ export default function SmallCard() {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjRhZWVmZGUxLWFiNWYtNDEyOS1iZGUyLTlmZWFjZThlOTMxNSIsInVzZXIiOiJNdWhhbW1hZCBEYWZmYSBSYWloYW4gU3VwZXJBZG1pbiIsInJvbGUiOiIzOGQzMjIzYS0xMjYwLTQyYmYtYTMxNy02N2JlZDZlYmE2ODEiLCJpYXQiOjE3Mjk3Njk2NjksImlzcyI6IkFwaUtlZXBVcCIsImF1ZCI6IktlZXBVcCIsImV4cCI6MTcyOTc3MzI2OX0.TGhvZ-U2jNpWa3TRSBXozpErsw2PPgqGFdQ9EjeOd4I`,
+              Authorization: `Bearer ${access_token}`,
               "ngrok-skip-browser-warning": "69420", // Ganti dengan token atau metode autentikasi lainnya
             },
           }

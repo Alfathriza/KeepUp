@@ -3,41 +3,43 @@ import React, { useEffect, useState, useRef } from "react";
 import { Edit } from "lucide-react";
 import { useParams } from "next/navigation";
 import NavKuisioner from "./NavKuisioner"; // Import NavKuisioner
+import Cookies from "js-cookie";
 
 export default function IsiKuisioner() {
-  const { id } = useParams(); // Mengambil id dari URL params
-  const [kuisionerTitle, setKuisionerTitle] = useState(""); // State untuk judul kuisioner
-  const [isEditingTitle, setIsEditingTitle] = useState(false); // State untuk edit judul
-  const [isShowButtonTitle, setIsShowButtonTitle] = useState(true); // State untuk edit judul
-  const titleRef = useRef(null); // Referensi untuk input judul kuisioner
-  const [questions, setQuestions] = useState([]); // State untuk menyimpan pertanyaan dari API
-  const [selectedQuestion, setSelectedQuestion] = useState(null); // State untuk menyimpan pertanyaan yang dipilih untuk diedit
-  const [editIndex, setEditIndex] = useState(null); // State untuk melacak jawaban yang sedang di-edit
-  const [isEditingAnswer, setIsEditingAnswer] = useState(false); // State untuk melacak apakah sedang mengedit jawaban
-  const [isEditingQuestion, setIsEditingQuestion] = useState(false); // State untuk melacak apakah sedang mengedit pertanyaan
-  const questionTitleRef = useRef(null); // Referensi untuk judul pertanyaan yang di-edit
-  const textRef = useRef(null); // Referensi untuk input jawaban yang di-edit
-  const scoreRef = useRef(null); // Referensi untuk input skor yang di-edit
+  const { id } = useParams();
+  const [kuisionerTitle, setKuisionerTitle] = useState("");
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [isShowButtonTitle, setIsShowButtonTitle] = useState(true);
+  const titleRef = useRef(null);
+  const [questions, setQuestions] = useState([]);
+  const [selectedQuestion, setSelectedQuestion] = useState(null);
+  const [editIndex, setEditIndex] = useState(null);
+  const [isEditingAnswer, setIsEditingAnswer] = useState(false);
+  const [isEditingQuestion, setIsEditingQuestion] = useState(false);
+  const questionTitleRef = useRef(null);
+  const textRef = useRef(null);
+  const scoreRef = useRef(null);
 
-  // Fetch data dari API berdasarkan id
+
+   const access_token = Cookies.get("access_token");
   useEffect(() => {
     const fetchKuisionerData = async () => {
       try {
         const response = await fetch(
-          `https://enormous-mint-tomcat.ngrok-free.app/v1/subKuisioner/${id}`, // URL dengan id dari params
+          `https://enormous-mint-tomcat.ngrok-free.app/v1/subKuisioner/${id}`,
           {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjRhZWVmZGUxLWFiNWYtNDEyOS1iZGUyLTlmZWFjZThlOTMxNSIsInVzZXIiOiJNdWhhbW1hZCBEYWZmYSBSYWloYW4gU3VwZXJBZG1pbiIsInJvbGUiOiIzOGQzMjIzYS0xMjYwLTQyYmYtYTMxNy02N2JlZDZlYmE2ODEiLCJpYXQiOjE3Mjk3NzcxOTgsImlzcyI6IkFwaUtlZXBVcCIsImF1ZCI6IktlZXBVcCIsImV4cCI6MTcyOTc4MDc5OH0.hGpOhDzGQ_LJaCmSTbMtT-0tz9rvoAedt60QoqxcImk`, // Token autentikasi yang valid
+              Authorization: `Bearer ${access_token}`, // Replace with a valid token
               "ngrok-skip-browser-warning": "69420",
             },
           }
         );
         const result = await response.json();
         if (result.statusCode === 200) {
-          setQuestions(result.data.questions); // Simpan data questions dari API response
-          setKuisionerTitle(result.data.title); // Simpan judul kuisioner
+          setQuestions(result.data.questions);
+          setKuisionerTitle(result.data.title);
         }
       } catch (error) {
         console.error("Error fetching kuisioner data:", error);
@@ -45,61 +47,60 @@ export default function IsiKuisioner() {
     };
 
     if (id) {
-      fetchKuisionerData(); // Panggil fungsi fetch hanya jika id tersedia
+      fetchKuisionerData();
     }
   }, [id]);
 
-  // Fungsi untuk menyimpan judul kuisioner yang diedit
   const handleSaveTitleClick = () => {
-    setKuisionerTitle(titleRef.current.value); // Update judul kuisioner
-    setIsEditingTitle(false); // Keluar dari mode edit
+    setKuisionerTitle(titleRef.current.value);
+    setIsEditingTitle(false);
   };
 
-  // Fungsi untuk menangani klik tombol edit pertanyaan
   const handleEditClick = (question) => {
-    setIsShowButtonTitle(false)
-    setSelectedQuestion(question); // Simpan pertanyaan yang dipilih
-    setIsEditingQuestion(true); // Set ke true jika mengedit pertanyaan
-    setIsEditingAnswer(false); // Pastikan mengedit jawaban dalam keadaan false
+    setIsShowButtonTitle(false);
+    setSelectedQuestion(question);
+    setIsEditingQuestion(true);
+    setIsEditingAnswer(false);
   };
 
-  // Fungsi untuk menyimpan judul pertanyaan dan jawaban yang diedit
   const handleSaveClick = () => {
-    // Update judul pertanyaan
     const updatedQuestion = {
       ...selectedQuestion,
       question: questionTitleRef.current.value,
     };
 
-    // Simpan perubahan ke pertanyaan tanpa mengembalikan ke daftar
     const updatedQuestions = questions.map((q) =>
       q.id === updatedQuestion.id ? updatedQuestion : q
     );
     setQuestions(updatedQuestions);
-    setIsEditingAnswer(false); // Tetap di halaman edit tanpa mengubah state `selectedQuestion` atau `editIndex`
+    setSelectedQuestion(updatedQuestion); // Update selectedQuestion to reflect changes
+    setIsEditingAnswer(false);
   };
 
-  // Fungsi untuk menyimpan jawaban yang diedit
   const handleSaveAnswerClick = (answerIndex) => {
-    // Update jawaban
     const updatedAnswers = [...selectedQuestion.answers];
     updatedAnswers[answerIndex].answer = textRef.current.value;
     updatedAnswers[answerIndex].score = parseInt(scoreRef.current.value, 10);
 
-    setSelectedQuestion({
+    const updatedQuestion = {
       ...selectedQuestion,
       answers: updatedAnswers,
-    }); // Simpan perubahan
-    setEditIndex(null); // Tetap di halaman setelah menyimpan
+    };
+
+    setSelectedQuestion(updatedQuestion);
+    const updatedQuestions = questions.map((q) =>
+      q.id === updatedQuestion.id ? updatedQuestion : q
+    );
+    setQuestions(updatedQuestions);
+    setEditIndex(null);
   };
 
-  // Fungsi untuk menangani klik back
   const handleBackClick = () => {
     if (isEditingAnswer) {
-      setIsEditingAnswer(false); // Kembali ke halaman edit pertanyaan
+      setIsEditingAnswer(false);
     } else {
-       setIsShowButtonTitle(true);
-      setSelectedQuestion(null); // Kembali ke daftar pertanyaan
+      setIsShowButtonTitle(true);
+      setSelectedQuestion(null);
       setIsEditingQuestion(false);
     }
   };
@@ -109,11 +110,13 @@ export default function IsiKuisioner() {
       <NavKuisioner
         isEditingAnswer={isEditingAnswer}
         isEditingQuestion={isEditingQuestion}
-        handleBackClick={handleBackClick} // Operasikan handleBackClick
-        handleSaveClick={handleSaveClick} // Operasikan handleSaveClick
+        handleBackClick={handleBackClick}
+        handleSaveClick={handleSaveClick}
+        questionId={selectedQuestion?.id}
+        questionText={selectedQuestion?.question}
+        updateAnswers={selectedQuestion?.answers}
       />
       <div className="mt-4 ml-16" style={{ width: "1400px" }}>
-        {/* Hanya tampilkan button Edit di halaman edit pertanyaan, dan hilangkan di halaman edit jawaban */}
         {!isEditingAnswer && (
           <div className="mb-6">
             <label className="font-semibold text-slate-950 text-sm mb-2 block">
@@ -132,34 +135,32 @@ export default function IsiKuisioner() {
                   {kuisionerTitle}
                 </h3>
               )}
-              {isShowButtonTitle?(   <button
-                onClick={
-                  isEditingTitle
-                    ? handleSaveTitleClick
-                    : () => setIsEditingTitle(true)
-                }
-                className={`flex items-center ${
-                  isEditingTitle
-                    ? "bg-blue-700 text-white"
-                    : "bg-gray-200 text-black"
-                } px-4 py-2 rounded-lg`}
-              >
-                {isEditingTitle ? "Save" : "Edit"}
-                <Edit className="ml-2 w-4 h-4" />
-              </button>):null}
-          
+              {isShowButtonTitle ? (
+                <button
+                  onClick={
+                    isEditingTitle
+                      ? handleSaveTitleClick
+                      : () => setIsEditingTitle(true)
+                  }
+                  className={`flex items-center ${
+                    isEditingTitle
+                      ? "bg-blue-700 text-white"
+                      : "bg-gray-200 text-black"
+                  } px-4 py-2 rounded-lg`}
+                >
+                  {isEditingTitle ? "Save" : "Edit"}
+                  <Edit className="ml-2 w-4 h-4" />
+                </button>
+              ) : null}
             </div>
           </div>
         )}
 
-        {/* Jika ada pertanyaan yang dipilih, tampilkan jawaban dan form edit */}
         {selectedQuestion ? (
           <div>
             <h2 className="text-xl font-semibold text-slate-900 mb-4">
               Edit Pertanyaan
             </h2>
-
-            {/* Input untuk mengedit judul pertanyaan */}
             <div className="flex flex-row items-center mb-4">
               <input
                 type="text"
@@ -168,14 +169,12 @@ export default function IsiKuisioner() {
                 className="p-2 border border-gray-300 rounded-lg flex-grow text-black"
               />
               <button
-                onClick={handleSaveClick} // Tombol untuk menyimpan perubahan judul pertanyaan
+                onClick={handleSaveClick}
                 className="bg-blue-600 text-white px-4 py-2 rounded-lg ml-4"
               >
                 Save
               </button>
             </div>
-
-            {/* Menampilkan jawaban yang bisa di-edit */}
             {selectedQuestion.answers.map((answer, index) => (
               <div
                 key={answer.id}
@@ -217,7 +216,7 @@ export default function IsiKuisioner() {
                       <button
                         onClick={() => {
                           setEditIndex(index);
-                          setIsEditingAnswer(true); // Set ke true jika mengedit jawaban
+                          setIsEditingAnswer(true);
                         }}
                         className="flex items-center bg-gray-200 text-black px-4 py-2 rounded-lg mr-4"
                       >
@@ -233,31 +232,28 @@ export default function IsiKuisioner() {
             ))}
           </div>
         ) : (
-          // Tampilkan daftar pertanyaan jika tidak ada pertanyaan yang sedang di-edit
-          <>
-            {questions.map((question, index) => (
-              <div
-                key={question.id}
-                className="flex items-center justify-between bg-gray-100 p-4 rounded-lg shadow-md mb-4"
-              >
-                <div className="flex flex-row items-start">
-                  <span className="flex-row mr-4 text-slate-950 font-semibold">
-                    {index + 1}.
-                  </span>
-                  <p className="flex-row text-slate-950 text-lg">
-                    {question.question}
-                  </p>
-                </div>
-                <button
-                  onClick={() => handleEditClick(question)} // Pilih pertanyaan untuk diedit
-                  className="flex items-center bg-gray-200 text-black px-4 py-2 rounded-lg"
-                >
-                  Edit
-                  <Edit className="ml-2 w-4 h-4" />
-                </button>
+          questions.map((question, index) => (
+            <div
+              key={question.id}
+              className="flex items-center justify-between bg-gray-100 p-4 rounded-lg shadow-md mb-4"
+            >
+              <div className="flex flex-row items-start">
+                <span className="flex-row mr-4 text-slate-950 font-semibold">
+                  {index + 1}.
+                </span>
+                <p className="flex-row text-slate-950 text-lg">
+                  {question.question}
+                </p>
               </div>
-            ))}
-          </>
+              <button
+                onClick={() => handleEditClick(question)}
+                className="flex items-center bg-gray-200 text-black px-4 py-2 rounded-lg"
+              >
+                Edit
+                <Edit className="ml-2 w-4 h-4" />
+              </button>
+            </div>
+          ))
         )}
       </div>
     </div>

@@ -1,12 +1,15 @@
 "use client";
 import * as React from "react";
 import { PieChart } from "@mui/x-charts/PieChart";
+import Cookies from "js-cookie";
 
 export default function BasicPie() {
   const [data, setData] = React.useState([
     { id: 0, value: 0, label: "Perempuan" },
     { id: 1, value: 0, label: "Laki-Laki" },
   ]);
+
+   const access_token = Cookies.get("access_token");
 
   // Fetch data from API
   React.useEffect(() => {
@@ -18,7 +21,7 @@ export default function BasicPie() {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjRhZWVmZGUxLWFiNWYtNDEyOS1iZGUyLTlmZWFjZThlOTMxNSIsInVzZXIiOiJNdWhhbW1hZCBEYWZmYSBSYWloYW4gU3VwZXJBZG1pbiIsInJvbGUiOiIzOGQzMjIzYS0xMjYwLTQyYmYtYTMxNy02N2JlZDZlYmE2ODEiLCJpYXQiOjE3Mjk3Njk2NjksImlzcyI6IkFwaUtlZXBVcCIsImF1ZCI6IktlZXBVcCIsImV4cCI6MTcyOTc3MzI2OX0.TGhvZ-U2jNpWa3TRSBXozpErsw2PPgqGFdQ9EjeOd4I`,
+              Authorization: `Bearer ${access_token} `,
               "ngrok-skip-browser-warning": "69420", // Ganti dengan token yang valid
             },
           }

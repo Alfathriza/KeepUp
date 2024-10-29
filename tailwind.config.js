@@ -12,6 +12,16 @@ module.exports = {
         foreground: "var(--foreground)",
       },
     },
+    screens: {
+      phone: "576px",
+      // => @media (min-width: 576px) { ... }
+
+      tablet: "960px",
+      // => @media (min-width: 960px) { ... }
+
+      desktop: "1440px",
+      // => @media (min-width: 1440px) { ... }
+    },
   },
   plugins: [],
 };
