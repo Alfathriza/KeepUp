@@ -20,7 +20,7 @@ export default function Page() {
       </div>
 
       {/* Row for BarChart and PieChart, aligned horizontally */}
-      <div className="flex flex-grow p-4 justify-between mt-7 items-center">
+      <div className="flex flex-grow p-1 justify-between mt-7 items-center">
         <div style={{ width: "50%" }}>
           <SBarChart />
         </div>
@@ -29,7 +29,7 @@ export default function Page() {
         </div>
       </div>
 
-      <div className="flex flex-grow p-4 justify-between">
+      <div className="flex flex-grow p-1 justify-between">
         <TableMahasiswa />
       </div>
       <div className="flex flex-grow p-4 justify-between">

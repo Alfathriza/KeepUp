@@ -49,8 +49,14 @@ export default function Login() {
         // Simpan access token di cookie (jika diberikan di response body)
         Cookies.set("access_token", data.data.access_token, { expires: 1 }); // 1 hari masa berlaku
 
+        if (data.data.isAdmin){
+          router.push("/Admin/dashboard");
+        }
+        else{
+          router.push("/SuperAdmin/dashboard");
+        }
         // Redirect ke dashboard
-        router.push("/SuperAdmin/dashboard");
+        
       } else {
         // Tampilkan pesan error jika login gagal
         setError(data.message || "Login failed. Please try again.");

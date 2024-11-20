@@ -13,7 +13,7 @@ export default function Navbar() {
         {/* Logo */}
         <div className="flex items-start space-x-6">
           <img
-            src="/img/emindlog.png"
+            src="/img/keepup.png"
             className="h-10 w-16"
             alt="Emindlog Logo"
           />

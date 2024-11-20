@@ -1,40 +1,81 @@
 "use client";
-import React from "react";
-import { BarChart } from "@mui/x-charts/BarChart";
-import { axisClasses } from "@mui/x-charts/ChartsAxis";
+import React, { useEffect, useState } from "react";
+import Cookies from "js-cookie";
+import SimpleBarChart from "../general/BarchartG";
 
-// Komponen grafik batang
-const SimpleBarChart = ({ title, dataset }) => {
-  const chartSetting = {
-    yAxis: [
-      {
-        label: "Jumlah Pengisi Kuisioner",
-      },
-    ],
-    series: [{ dataKey: "jumlah", label: "Jumlah Pengisi" }],
-    height: 300, // Pastikan tinggi seragam
-    sx: {
-      [`& .${axisClasses.directionY} .${axisClasses.label}`]: {
-        transform: "translateX(-10px)",
-      },
-    },
-  };
+export default function StatistikKuisionerChart() {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  return (
-    <div style={{ width: "400px", height: "300px", marginTop: "20px" }}>
-      <h2
-        className="font-semibold text-lg text-slate-900"
-        style={{ marginBottom: "10px" }}
-      >
-        {title}
-      </h2>
-      <BarChart
-        dataset={dataset}
-        xAxis={[{ scaleType: "band", dataKey: "category" }]}
-        {...chartSetting}
-      />
-    </div>
-  );
-};
+  const access_token = Cookies.get("access_token");
 
-export default SimpleBarChart;
+  useEffect(() => {
+    const fetchStatistik = async () => {
+      try {
+        const response = await fetch(
+          "https://enormous-mint-tomcat.ngrok-free.app/v1/statistik/superAdmin/symtomp", 
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${access_token}`,
+              "ngrok-skip-browser-warning": "69420", 
+            },
+          }
+        );
+        const result = await response.json();
+
+        if (result.statusCode === 200 && result.data?.StatistikKuisioner) {
+          // console.log(result)
+          const statistikData = result.data.StatistikKuisioner;
+        const transformData = (data) => {
+          return Object.entries(data)
+            .filter(([category]) => category !== "Kecanduan Ponsel") // Exclude "Kecanduan Ponsel"
+            .map(([category, levels]) => {
+              // Handle special case for "Kecanduan"
+              const resolvedCategory =
+                category === "Kecanduan" ? "Kecanduan Ponsel" : category;
+
+              return {
+                title: resolvedCategory,
+                dataset: Object.entries(levels[0]).map(([level, count]) => ({
+                  category: level,
+                  jumlah: count,
+                })),
+              };
+            });
+        };
+
+
+
+          // console.log (statistikData);
+          setData(transformData(statistikData));
+        } else {
+          throw new Error("Invalid response structure");
+        }
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStatistik();
+  }, []);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
+
+ return (
+   <div className="grid grid-cols-3 sm:grid-cols-2 gap-6">
+     {data.map((item, index) => (
+       <div key={index} className="flex justify-center">
+         <SimpleBarChart title={item.title} dataset={item.dataset} />
+       </div>
+     ))}
+   </div>
+ );
+
+
+}

@@ -57,17 +57,18 @@ export default function CardKuis() {
             style={{ width: "400px", height: "200px" }} // Menentukan lebar tetap untuk setiap item
           >
             <h4 className="font-semibold text-md">{subKuisioner.title}</h4>
-            <p className="text-sm">
+            <p className="text-sm mt-4">
               Created At:{" "}
               {new Date(subKuisioner.createdAt).toLocaleDateString()}
             </p>
-            <p className="text-sm">
+            <p className="text-sm mt-1">
               Updated At:{" "}
               {new Date(subKuisioner.updatedAt).toLocaleDateString()}
             </p>
             <button
               onClick={() => handleEditClick(subKuisioner.id)} // Pindah ke halaman edit subKuisioner berdasarkan id
-              className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg mt-2"
+              className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg mt-12"
+              style={{width: "80px"}}
             >
               Edit
               <Edit className="w-4 h-4 ml-2" />

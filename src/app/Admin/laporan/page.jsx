@@ -7,38 +7,10 @@ import SimpleBarChart from "@/app/components/Admin/BarchartM"; // Ensure this pa
 import RecomAi from "@/app/components/Admin/RecomAi";
 import SBarChart from "@/app/components/Admin/Barchart";
 import BasicPie from "@/app/components/Admin/Piechart";
+import StatistikKuisionerChartAdmin from "@/app/components/Admin/BarchartM";
 
 const LaporanPage = () => {
   const chartsRef = useRef(); // Ref to capture chart container
-
-  // Datasets for each category
-  const datasets = {
-    Depresi: [
-      { category: "Berat", jumlah: 120 },
-      { category: "Sedang", jumlah: 95 },
-      { category: "Ringan", jumlah: 110 },
-    ],
-    Stress: [
-      { category: "Berat", jumlah: 80 },
-      { category: "Sedang", jumlah: 70 },
-      { category: "Ringan", jumlah: 50 },
-    ],
-    Kecemasan: [
-      { category: "Berat", jumlah: 90 },
-      { category: "Sedang", jumlah: 100 },
-      { category: "Ringan", jumlah: 60 },
-    ],
-    Prokrastinasi: [
-      { category: "Berat", jumlah: 70 },
-      { category: "Sedang", jumlah: 85 },
-      { category: "Ringan", jumlah: 90 },
-    ],
-    KecanduanPonsel: [
-      { category: "Berat", jumlah: 40 },
-      { category: "Sedang", jumlah: 55 },
-      { category: "Ringan", jumlah: 60 },
-    ],
-  };
 
   // Function to download PDF
   const downloadPDF = async () => {
@@ -89,27 +61,16 @@ const LaporanPage = () => {
       {/* Container for charts */}
       <div ref={chartsRef} className="flex flex-col gap-4 mx-10">
         {/* Bar Chart pertama */}
-        <div className="flex flex-row justify-start gap-28">
-          <SimpleBarChart title="Kategori Depresi" dataset={datasets.Depresi} />
-          <SimpleBarChart title="Kategori Stress" dataset={datasets.Stress} />
-          <SimpleBarChart
-            title="Kategori Kecemasan"
-            dataset={datasets.Kecemasan}
-          />
-        </div>
+       
+        
+          <div
+            className="flex flex-col justify-start items-center"
+            style={{ marginTop: "20px" }}
+          >
+            <StatistikKuisionerChartAdmin />
+          </div>
 
-        {/* Bar Chart kedua */}
-        <div className="flex flex-row justify-start gap-28 ">
-          <SimpleBarChart
-            title="Kategori Prokrastinasi"
-            dataset={datasets.Prokrastinasi}
-          />
-          <SimpleBarChart
-            title="Kategori Kecanduan Ponsel"
-            dataset={datasets.KecanduanPonsel}
-          />
         </div>
-      </div>
 
       <div className="flex flex-grow p-4 justify-between">
         <RecomAi />

@@ -1,44 +1,85 @@
 "use client";
-import React, { useRef } from "react";
-import { jsPDF } from "jspdf"; // Import jsPDF
-import html2canvas from "html2canvas"; // Import html2canvas
+import React, { useState, useEffect, useRef } from "react";
+import { jsPDF } from "jspdf";
+import html2canvas from "html2canvas";
 import Navbar from "@/app/components/SuperAdmin/NavbarSA";
-import SimpleBarChart from "@/app/components/SuperAdmin/BarchartMSA"; // Ensure this path is correct
 import RecomAi from "@/app/components/SuperAdmin/RecomAiSA";
 import SBarChart from "@/app/components/SuperAdmin/BarchartSA";
 import BasicPie from "@/app/components/SuperAdmin/PiechartSA";
+import Cookies from "js-cookie";
+import SimpleBarChart from "@/app/components/Admin/BarchartM";
+import StatistikKuisionerChart from "@/app/components/SuperAdmin/BarchartMSA";
 
 const LaporanPage = () => {
-  const chartsRef = useRef(); // Ref to capture chart container
+  const chartsRef = useRef();
+  const [datasets, setDatasets] = useState({});
+  const [loading, setLoading] = useState(true);
+  // const access_token = Cookies.get("access_token");
 
-  // Datasets for each category
-  const datasets = {
-    Depresi: [
-      { category: "Berat", jumlah: 120 },
-      { category: "Sedang", jumlah: 95 },
-      { category: "Ringan", jumlah: 110 },
-    ],
-    Stress: [
-      { category: "Berat", jumlah: 80 },
-      { category: "Sedang", jumlah: 70 },
-      { category: "Ringan", jumlah: 50 },
-    ],
-    Kecemasan: [
-      { category: "Berat", jumlah: 90 },
-      { category: "Sedang", jumlah: 100 },
-      { category: "Ringan", jumlah: 60 },
-    ],
-    Prokrastinasi: [
-      { category: "Berat", jumlah: 70 },
-      { category: "Sedang", jumlah: 85 },
-      { category: "Ringan", jumlah: 90 },
-    ],
-    KecanduanPonsel: [
-      { category: "Berat", jumlah: 40 },
-      { category: "Sedang", jumlah: 55 },
-      { category: "Ringan", jumlah: 60 },
-    ],
-  };
+  // // Fetch data from API
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch(
+  //         "https://enormous-mint-tomcat.ngrok-free.app/v1/statistik/superAdmin/symtomp",
+  //         {
+  //           method: "GET",
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //             Authorization: `Bearer ${access_token}`,
+  //             "ngrok-skip-browser-warning": "69420",
+  //           },
+  //         }
+  //       );
+
+  //       const result = await response.json();
+
+  //       if (result.statusCode === 200 && result.data.StatistikKuisioner) {
+  //         const rawData = result.data.StatistikKuisioner;
+
+  //         // Transform API data
+  //         // const transformedDatasets = {
+  //         //   Depresi: Object.entries(rawData.Depresi[0]).map(
+  //         //     ([level, count]) => ({
+  //         //       category: level,
+  //         //       jumlah: count,
+  //         //     })
+  //         //   ),
+  //         //   Stress: Object.entries(rawData.Stress[0]).map(([level, count]) => ({
+  //         //     category: level,
+  //         //     jumlah: count,
+  //         //   })),
+  //         //   Kecemasan: Object.entries(rawData.Kecemasan[0]).map(
+  //         //     ([level, count]) => ({
+  //         //       category: level,
+  //         //       jumlah: count,
+  //         //     })
+  //         //   ),
+  //         //   Prokrastinasi: Object.entries(rawData.Prokrastinasi[0]).map(
+  //         //     ([level, count]) => ({
+  //         //       category: level,
+  //         //       jumlah: count,
+  //         //     })
+  //         //   ),
+  //         //   KecanduanPonsel: Object.entries(rawData["Kecanduan Ponsel"][0]).map(
+  //         //     ([level, count]) => ({
+  //         //       category: level,
+  //         //       jumlah: count,
+  //         //     })
+  //         //   ),
+  //         // };
+  //         console.log(rawData);
+  //         setDatasets(rawData);
+  //         setLoading(false);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching data:", error);
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, []);
 
   // Function to download PDF
   const downloadPDF = async () => {
@@ -58,16 +99,18 @@ const LaporanPage = () => {
       y += 10; // Space between categories
     }
 
-    // Capture charts after a slight delay to ensure rendering
     setTimeout(async () => {
       const charts = await html2canvas(chartsRef.current);
       const chartsImageData = charts.toDataURL("image/png");
 
-      // Add charts to the PDF
-      doc.addImage(chartsImageData, "PNG", 15, y, 180, 150); // Adjust position and size as needed
+      doc.addImage(chartsImageData, "PNG", 15, y, 180, 150);
       doc.save("laporan_kuisioner.pdf");
-    }, 1000); // Adjust timeout as necessary
+    }, 1000);
   };
+
+  // if (loading) {
+  //   return <div className="text-center mt-20">Loading data...</div>;
+  // }
 
   return (
     <div className="flex flex-col bg-white min-h-screen">
@@ -88,17 +131,14 @@ const LaporanPage = () => {
 
       {/* Container for charts */}
       <div ref={chartsRef} className="flex flex-col gap-4 mx-10">
-        {/* Bar Chart pertama */}
-        <div className="flex flex-row justify-start gap-28">
-          <SimpleBarChart title="Kategori Depresi" dataset={datasets.Depresi} />
-          <SimpleBarChart title="Kategori Stress" dataset={datasets.Stress} />
-          <SimpleBarChart
-            title="Kategori Kecemasan"
-            dataset={datasets.Kecemasan}
-          />
-        </div>
-
-        {/* Bar Chart kedua */}
+        {
+          <div
+            className="flex flex-col justify-start items-center"
+            style={{ marginTop: "20px" }}
+          >
+            <StatistikKuisionerChart />
+          </div>
+          /* 
         <div className="flex flex-row justify-start gap-28 ">
           <SimpleBarChart
             title="Kategori Prokrastinasi"
@@ -108,7 +148,8 @@ const LaporanPage = () => {
             title="Kategori Kecanduan Ponsel"
             dataset={datasets.KecanduanPonsel}
           />
-        </div>
+        </div> */
+        }
       </div>
 
       <div className="flex flex-grow p-4 justify-between">

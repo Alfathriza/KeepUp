@@ -11,13 +11,16 @@ export default function Navbar() {
     <nav className="flex items-center justify-between bg-white text-slate-900 h-20 px-7 fixed top-0 w-full z-10 shadow-md">
       <div className="max-w-screen-xl flex items-center w-full">
         {/* Logo */}
-        <div className="flex items-start space-x-6">
+        <div className="flex items-center space-x-6">
+          {" "}
+          {/* Changed items-start to items-center */}
           <img
-            src="/img/emindlog.png"
-            className="h-10 w-16"
+            src="/img/keepup.png"
+            className="h-8 w-20" // Adjust height to match other logo
             alt="Emindlog Logo"
           />
-          <img src="/img/UII_LOGO.png" className="h-13 w-16" alt="UII Logo" />
+          <img src="/img/UII_LOGO.png" className="h-12 w-20" alt="UII Logo" />{" "}
+          {/* Adjust height to match */}
         </div>
 
         {/* Navigation Links */}
@@ -95,7 +98,9 @@ export default function Navbar() {
       {/* Settings */}
       <div className="flex items-center mr-13">
         <h5 className="font-normal text-slate-950 flex items-center mr-3">
-          Hello <span className="font-semibold ml-1">Super Admin</span>
+          Hello
+          <span className="font-semibold ml-1">Admin</span>{" "}
+          {/* Reduced margin */}
           <Settings className="ml-2 h-5 w-5" />
         </h5>
       </div>
