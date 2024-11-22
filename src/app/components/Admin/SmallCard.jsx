@@ -20,7 +20,7 @@ export default function SmallCard() {
     const fetchStatistik = async () => {
       try {
         const response = await fetch(
-          "https://enormous-mint-tomcat.ngrok-free.app/v1/psychology/statistik",
+          "https://enormous-mint-tomcat.ngrok-free.app/v1/statistik/psychology",
           {
             method: "GET",
             headers: {

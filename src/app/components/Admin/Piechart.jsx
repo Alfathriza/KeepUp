@@ -16,7 +16,7 @@ export default function BasicPie() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "https://enormous-mint-tomcat.ngrok-free.app/v1/psychology/statistik/gender",
+          "https://enormous-mint-tomcat.ngrok-free.app/v1/statistik/psychology/gender",
           {
             method: "GET",
             headers: {

@@ -14,7 +14,7 @@ export default function StatistikKuisionerChartAdmin() {
     const fetchStatistik = async () => {
       try {
         const response = await fetch(
-          "https://enormous-mint-tomcat.ngrok-free.app/v1/psychology/statistik/symtomp",
+          "https://enormous-mint-tomcat.ngrok-free.app/v1/statistik/psychology/symtomp",
           {
             method: "GET",
             headers: {
