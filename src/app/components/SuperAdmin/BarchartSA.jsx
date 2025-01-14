@@ -44,7 +44,7 @@ export default function SBarChart() {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${access_token}`,
-              "ngrok-skip-browser-warning": "69420", // Ganti dengan token atau metode autentikasi lainnya
+              "ngrok-skip-browser-warning": "69420", 
             },
           }
         );
@@ -79,7 +79,7 @@ export default function SBarChart() {
   return (
     <div style={{ width: "800px", height: "400px", marginTop: "20px" }}>
       <h2
-        className="font-semibold text-xl text-slate-900"
+        className="font-semibold ml-4 text-xl text-slate-900"
         style={{ marginBottom: "10px" }}
       >
         Grafik Hasil Kuisioner

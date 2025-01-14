@@ -1,116 +1,69 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
-import { jsPDF } from "jspdf";
-import html2canvas from "html2canvas";
+import React, { useState, useRef } from "react";
 import Navbar from "@/app/components/SuperAdmin/NavbarSA";
 import RecomAi from "@/app/components/SuperAdmin/RecomAiSA";
 import SBarChart from "@/app/components/SuperAdmin/BarchartSA";
 import BasicPie from "@/app/components/SuperAdmin/PiechartSA";
 import Cookies from "js-cookie";
-import SimpleBarChart from "@/app/components/Admin/BarchartM";
 import StatistikKuisionerChart from "@/app/components/SuperAdmin/BarchartMSA";
 
 const LaporanPage = () => {
   const chartsRef = useRef();
   const [datasets, setDatasets] = useState({});
   const [loading, setLoading] = useState(true);
-  // const access_token = Cookies.get("access_token");
 
-  // // Fetch data from API
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await fetch(
-  //         "https://enormous-mint-tomcat.ngrok-free.app/v1/statistik/superAdmin/symtomp",
-  //         {
-  //           method: "GET",
-  //           headers: {
-  //             "Content-Type": "application/json",
-  //             Authorization: `Bearer ${access_token}`,
-  //             "ngrok-skip-browser-warning": "69420",
-  //           },
-  //         }
-  //       );
+  const downloadExcel = async () => {
+    try {
+      const access_token = Cookies.get("access_token"); // Retrieve the access token
 
-  //       const result = await response.json();
+      if (!access_token) {
+        throw new Error("Access token is missing.");
+      }
 
-  //       if (result.statusCode === 200 && result.data.StatistikKuisioner) {
-  //         const rawData = result.data.StatistikKuisioner;
+      const response = await fetch(
+        "https://enormous-mint-tomcat.ngrok-free.app/v1/export/generate/excel",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+            "ngrok-skip-browser-warning": "69420", // Corrected template literal
+          },
+        }
+      );
 
-  //         // Transform API data
-  //         // const transformedDatasets = {
-  //         //   Depresi: Object.entries(rawData.Depresi[0]).map(
-  //         //     ([level, count]) => ({
-  //         //       category: level,
-  //         //       jumlah: count,
-  //         //     })
-  //         //   ),
-  //         //   Stress: Object.entries(rawData.Stress[0]).map(([level, count]) => ({
-  //         //     category: level,
-  //         //     jumlah: count,
-  //         //   })),
-  //         //   Kecemasan: Object.entries(rawData.Kecemasan[0]).map(
-  //         //     ([level, count]) => ({
-  //         //       category: level,
-  //         //       jumlah: count,
-  //         //     })
-  //         //   ),
-  //         //   Prokrastinasi: Object.entries(rawData.Prokrastinasi[0]).map(
-  //         //     ([level, count]) => ({
-  //         //       category: level,
-  //         //       jumlah: count,
-  //         //     })
-  //         //   ),
-  //         //   KecanduanPonsel: Object.entries(rawData["Kecanduan Ponsel"][0]).map(
-  //         //     ([level, count]) => ({
-  //         //       category: level,
-  //         //       jumlah: count,
-  //         //     })
-  //         //   ),
-  //         // };
-  //         console.log(rawData);
-  //         setDatasets(rawData);
-  //         setLoading(false);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching data:", error);
-  //       setLoading(false);
-  //     }
-  //   };
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Failed to download Excel file: ${errorText}`);
+      }
+      const headers = Array.from(response.headers.entries());
+      console.log("Response Headers:", headers);
+      // Extract filename from Content-Disposition header
+      const disposition = response.headers.get("Content-Disposition");
+      const filename = disposition
+        ? disposition.split("filename=")[1].replace(/"/g, "").trim()
+        : "default_filename.xlsx";
 
-  //   fetchData();
-  // }, []);
+      // Convert the response to Blob (Excel file)
+      return response.blob().then((blob) => {
+        // Create a URL for the blob
+        const url = window.URL.createObjectURL(blob);
 
-  // Function to download PDF
-  const downloadPDF = async () => {
-    const doc = new jsPDF();
-    doc.setFontSize(20);
-    doc.text("Laporan Hasil Kuisioner", 20, 20);
-    doc.setFontSize(12);
+        // Create an anchor element and trigger a download
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        a.click();
 
-    let y = 40; // Y-coordinate for text
-    for (const [title, data] of Object.entries(datasets)) {
-      doc.text(title, 20, y);
-      y += 10; // Space between texts
-      data.forEach((item) => {
-        doc.text(`${item.category}: ${item.jumlah}`, 30, y);
-        y += 10; // Space between items
+        // Revoke the object URL after the download
+        window.URL.revokeObjectURL(url);
       });
-      y += 10; // Space between categories
+    } catch (error) {
+      console.error("Error downloading Excel file:", error);
+      alert(
+        `Failed to download Excel file: ${error.message}. Please try again.`
+      );
     }
-
-    setTimeout(async () => {
-      const charts = await html2canvas(chartsRef.current);
-      const chartsImageData = charts.toDataURL("image/png");
-
-      doc.addImage(chartsImageData, "PNG", 15, y, 180, 150);
-      doc.save("laporan_kuisioner.pdf");
-    }, 1000);
   };
-
-  // if (loading) {
-  //   return <div className="text-center mt-20">Loading data...</div>;
-  // }
 
   return (
     <div className="flex flex-col bg-white min-h-screen">
@@ -122,34 +75,21 @@ const LaporanPage = () => {
       </div>
       <div className="flex justify-end mt-2 mr-10">
         <button
-          onClick={downloadPDF}
+          onClick={downloadExcel}
           className="px-4 py-2 bg-blue-600 text-white rounded shadow hover:bg-blue-500 transition"
         >
-          Download PDF
+          Download Excel
         </button>
       </div>
 
       {/* Container for charts */}
       <div ref={chartsRef} className="flex flex-col gap-4 mx-10">
-        {
-          <div
-            className="flex flex-col justify-start items-center"
-            style={{ marginTop: "20px" }}
-          >
-            <StatistikKuisionerChart />
-          </div>
-          /* 
-        <div className="flex flex-row justify-start gap-28 ">
-          <SimpleBarChart
-            title="Kategori Prokrastinasi"
-            dataset={datasets.Prokrastinasi}
-          />
-          <SimpleBarChart
-            title="Kategori Kecanduan Ponsel"
-            dataset={datasets.KecanduanPonsel}
-          />
-        </div> */
-        }
+        <div
+          className="flex flex-col justify-start items-center"
+          style={{ marginTop: "20px" }}
+        >
+          <StatistikKuisionerChart />
+        </div>
       </div>
 
       <div className="flex flex-grow p-4 justify-between">

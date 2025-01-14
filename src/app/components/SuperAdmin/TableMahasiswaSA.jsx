@@ -8,6 +8,44 @@ export default function TableMahasiswa() {
   const [error, setError] = useState(null);
   const access_token = Cookies.get("access_token");
 
+  const downloadStudentExcel = async (userId) => {
+    try {
+      const response = await fetch(
+        `https://enormous-mint-tomcat.ngrok-free.app/v1/export/generate/excel/${userId}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+            "ngrok-skip-browser-warning": "69420",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to download Excel file for userId: ${userId}`);
+      }
+
+      const disposition = response.headers.get("Content-Disposition");
+      const filename = disposition
+        ? disposition.split("filename=")[1].replace(/"/g, "").trim()
+        : "default_filename.xlsx";
+
+      return response.blob().then((blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      });
+    } catch (err) {
+      console.error(err.message);
+      alert(
+        `Failed to download Excel for userId: ${userId}. Please try again.`
+      );
+    }
+  };
+
   useEffect(() => {
     const fetchStudents = async () => {
       try {
@@ -52,7 +90,7 @@ export default function TableMahasiswa() {
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <div className="flex flex-col items-start bg-white max-w-md">
+    <div className="flex flex-col items-start bg-white max-w-md ml-5">
       <h2 className="font-semibold text-lg text-slate-900">
         Mahasiswa Yang Butuh Pertolongan Segera
       </h2>
@@ -75,26 +113,62 @@ export default function TableMahasiswa() {
             </h5>
             {student.symptoms &&
               Object.entries(student.symptoms).map(
-                ([symptom, details], symptomIndex) => (
-                  <div
-                    key={symptomIndex}
-                    className={`flex items-end border rounded-lg ${
-                      details.level === "low" || details.level === "very low"
-                        ? "bg-slate-500"
-                        : "bg-red-600"
-                    } p-2 ml-10 whitespace-nowrap`}
-                  >
-                    <h6 className="text-slate-50 text-sm">{symptom}</h6>
-                  </div>
-                )
+                ([symptomName, symptomDetails]) => {
+                  let severityColor;
+                  let severityText;
+
+                  switch (symptomDetails.level) {
+                    case "normal":
+                      severityColor = null; // Exclude "normal"
+                      severityText = null;
+                      break;
+                    case "very low":
+                    case "low":
+                      severityColor = "#6c757d"; // Gray for low and very low
+                      severityText = "Rendah";
+                      break;
+                    case "intermediate":
+                      severityColor = "#ffc107"; // Yellow for intermediate
+                      severityText = "Sedang";
+                      break;
+                    case "high":
+                    case "very high":
+                      severityColor = "#dc3545"; // Red for high and very high
+                      severityText = "Tinggi";
+                      break;
+                    default:
+                      severityColor = "#17a2b8"; // Blue for undefined or other states
+                      severityText = "Ringan";
+                  }
+
+                  if (!severityColor) {
+                    return null; // Skip normal conditions
+                  }
+
+                  return (
+                    <div
+                      key={symptomName}
+                      className="flex items-end border rounded-lg p-2 ml-10 whitespace-nowrap"
+                      style={{ backgroundColor: severityColor }}
+                    >
+                      <h6 className="text-slate-50 text-sm">{symptomName}</h6>
+                    </div>
+                  );
+                }
               )}
             <div className="flex justify-between w-full ml-16">
               <a
-                href="#"
+                href={student.contact}
                 className="text-slate-900 underline font-light text-sm"
               >
                 Kontak Mahasiswa
               </a>
+              <button
+                onClick={() => downloadStudentExcel(student.userId)}
+                className="ml-4 px-4 py-2 bg-blue-600 text-white rounded shadow hover:bg-blue-500 transition text-sm"
+              >
+                Download Excel
+              </button>
             </div>
           </div>
         ))

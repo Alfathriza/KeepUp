@@ -34,6 +34,7 @@ export default function TableMahasiswa() {
           result.data &&
           Array.isArray(result.data.UserSymptomStatistics)
         ) {
+          console.log("API Data:", result.data.UserSymptomStatistics); // Debug API data
           setStudents(result.data.UserSymptomStatistics);
         } else {
           throw new Error("Invalid response structure");
@@ -75,22 +76,56 @@ export default function TableMahasiswa() {
             </h5>
             {student.symptoms &&
               Object.entries(student.symptoms).map(
-                ([symptom, details], symptomIndex) => (
-                  <div
-                    key={symptomIndex}
-                    className={`flex items-end border rounded-lg ${
-                      details.level === "low" || details.level === "very low"
-                        ? "bg-slate-500"
-                        : "bg-red-600"
-                    } p-2 ml-10 whitespace-nowrap`}
-                  >
-                    <h6 className="text-slate-50 text-sm">{symptom}</h6>
-                  </div>
-                )
+                ([symptomName, symptomDetails]) => {
+                  // Process the symptoms directly
+                  let severityColor;
+                  let severityText;
+
+                  switch (symptomDetails.level) {
+                    case "normal":
+                      severityColor = null; // Exclude "normal"
+                      severityText = null;
+                      break;
+                    case "very low":
+                    case "low":
+                      severityColor = "#6c757d"; // Gray for low and very low
+                      severityText = "Rendah";
+                      break;
+                    case "intermediate":
+                      severityColor = "#ffc107"; // Yellow for intermediate
+                      severityText = "Sedang";
+                      break;
+                    case "high":
+                    case "very high":
+                      severityColor = "#dc3545"; // Red for high and very high
+                      severityText = "Tinggi";
+                      break;
+                    default:
+                      severityColor = "#17a2b8"; // Blue for undefined or other states
+                      severityText = "Ringan";
+                  }
+
+                  if (!severityColor) {
+                    return null; // Skip normal conditions
+                  }
+
+                  return (
+                    <div
+                      key={symptomName}
+                      className="flex items-end border rounded-lg p-2 ml-10 whitespace-nowrap"
+                      style={{ backgroundColor: severityColor }}
+                    >
+                      <h6 className="text-slate-50 text-sm">
+                        {symptomName}
+                      </h6>
+                    </div>
+                  );
+                }
               )}
+
             <div className="flex justify-between w-full ml-16">
               <a
-                href="#"
+                href={student.contact}
                 className="text-slate-900 underline font-light text-sm"
               >
                 Kontak Mahasiswa
