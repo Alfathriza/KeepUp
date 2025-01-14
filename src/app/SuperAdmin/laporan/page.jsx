@@ -91,10 +91,6 @@ const LaporanPage = () => {
           <StatistikKuisionerChart />
         </div>
       </div>
-
-      <div className="flex flex-grow p-4 justify-between">
-        <RecomAi />
-      </div>
       <div className="flex flex-grow p-4 justify-between mt-7 items-center">
         <div style={{ width: "50%" }}>
           <SBarChart />
@@ -102,6 +98,9 @@ const LaporanPage = () => {
         <div style={{ width: "40%" }}>
           <BasicPie />
         </div>
+      </div>
+      <div className="flex flex-grow p-4 justify-between">
+        <RecomAi />
       </div>
     </div>
   );
